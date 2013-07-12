@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-function xmldb_qtype_stack_install() {
+function xmldb_qtype_pmatch_install() {
     global $CFG;
 
     require_once($CFG->dirroot . '/question/type/pmatch/spellinglib.php');

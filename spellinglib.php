@@ -23,6 +23,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once($CFG->libdir . '/adminlib.php');
 
 /**
  * Object that provides spell-checking, to make it easy to support different back-ends.
@@ -56,19 +57,19 @@ abstract class qtype_pmatch_spell_checker {
         $backends = self::get_known_backends();
         if (!array_key_exists($spellchecker, $backends)) {
             debugging('Unknown spell checker back end ' . $spellchecker);
-            return new qtype_pmatch_null_spell_checker();
+            return new qtype_pmatch_null_spell_checker($lang);
         }
         $classname = $backends[$spellchecker];
         if (!$classname::is_available()) {
             debugging('Selected spell checker back end ' . $spellchecker . ' is not available.');
-            return new qtype_pmatch_null_spell_checker();
+            return new qtype_pmatch_null_spell_checker($lang);
         }
 
         $checker = new $classname($lang);
         if (!$checker->is_initialised()) {
             debugging('Spell checker back end ' . $spellchecker .
                     ' could not be initialised for language ' . $lang);
-            return new qtype_pmatch_null_spell_checker();
+            return new qtype_pmatch_null_spell_checker($lang);
         }
 
         return $checker;
@@ -296,7 +297,7 @@ class qtype_pmatch_admin_setting_environment_check extends admin_setting_heading
                 $a->lang = $lang;
                 $a->humanfriendlylang = $humanfriendlylang;
                 $a->langforspellchecker = $stringmanager->get_string('iso6391', 'langconfig', null, $lang);
-                if (qtype_pmatch_spell_checker::make($lang) instanceof qtype_pmatch_null_spell_checker) {
+                if (qtype_pmatch_spell_checker::make($a->langforspellchecker) instanceof qtype_pmatch_null_spell_checker) {
                     $results[] = get_string('env_dictmissing', 'qtype_pmatch', $a);
                 } else {
                     $results[] = get_string('env_dictok', 'qtype_pmatch', $a);

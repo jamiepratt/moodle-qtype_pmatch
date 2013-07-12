@@ -24,6 +24,7 @@
  */
 
 require_once($CFG->dirroot . '/question/type/pmatch/pmatch/interpreter.php');
+require_once($CFG->dirroot . '/question/type/pmatch/spellinglib.php');
 
 // The following is required because the xdebug library defaults to throwing a fatal error if
 // there is more than 100 nested function calls.
@@ -301,7 +302,7 @@ class pmatch_parsed_string {
         foreach ($words as $word) {
             $word = $this->options->strip_sentence_divider($word);
 
-            if (!$spellchecker->is_in_dictionary(word)) {
+            if (!$spellchecker->is_in_dictionary($word)) {
                 $misspelledwords[] = $word;
             }
         }
